@@ -1,43 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using MVCHomework.Data;
 using MVCHomework.Models;
 
-namespace MVCHomework.Pages.Movies
+
+namespace MVCHomework.Pages.Movies;
+
+public class DetailsModel : PageModel
 {
-    public class DetailsModel : PageModel
+    private readonly MVCHomework.Data.MVCHomeworkContext _context;
+
+    public DetailsModel(MVCHomework.Data.MVCHomeworkContext context)
     {
-        private readonly MVCHomework.Data.MVCHomeworkContext _context;
+        _context = context;
+    }
 
-        public DetailsModel(MVCHomework.Data.MVCHomeworkContext context)
+    public Movie Movie { get; set; } = default!;
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        public Movie Movie { get; set; } = default!;
+        Movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Movie == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Movie = movie;
-            }
-            return Page();
+            return NotFound();
         }
+        return Page();
     }
 }

@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using MVCHomework.Data;
 using MVCHomework.Models;
 
-namespace MVCHomework.Pages.Movies
+namespace RazorPagesMovie.Pages.Movies
 {
     public class CreateModel : PageModel
     {
-        private readonly MVCHomework.Data.MVCHomeworkContext _context;
+        private readonly MVCHomeworkContext _context;
 
-        public CreateModel(MVCHomework.Data.MVCHomeworkContext context)
+        public CreateModel(MVCHomeworkContext context)
         {
             _context = context;
         }
@@ -27,10 +22,11 @@ namespace MVCHomework.Pages.Movies
         [BindProperty]
         public Movie Movie { get; set; } = default!;
 
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || _context.Movie == null || Movie == null)
             {
                 return Page();
             }
